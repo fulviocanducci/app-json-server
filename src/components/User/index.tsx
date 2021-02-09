@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 interface IUser {
+  id?: number;
   name?: string;
   age?: number;
   company?: string;
@@ -20,6 +21,12 @@ function User() {
     axios
       .get('http://localhost:4000/usuarios')
       .then((resposta) => setUsuarios(resposta.data));
+  };
+
+  const deleteUsuario = (id?: number) => {
+    axios.delete(`http://localhost:4000/usuarios/${id}`).then(() => {
+      setUsuarios(usuarios.filter((x) => x.id !== id));
+    });
   };
 
   const enviarCadastro = (e: FormEvent) => {
@@ -57,6 +64,7 @@ function User() {
           usuarios.map((u, i) => (
             <div key={i}>
               {u.name} - {u.company} - {u.age} - {u.phone}
+              <button onClick={() => deleteUsuario(u.id)}>Excluir</button>
             </div>
           ))}
       </div>
